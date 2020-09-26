@@ -2,7 +2,7 @@
 
 for j in {0..5}
 do
-    for i in {0..99}
+    for i in {0..499}
     do
         ./multi A B C_${j} ${j} >> time_${j}.txt
     done
