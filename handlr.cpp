@@ -8,27 +8,34 @@
 template <typename T>
 int handlr (size_t n, size_t m, size_t p, std::ifstream & Fa, std::ifstream & Fb, std::ofstream & Fc, char mode, char type) {
     T ** A = new T * [n];
-    T ** B = new T * [n];
-    T ** C = new T * [n];
+    T ** B = new T * [m];
+
     for (size_t i = 0; i < n; i++) {
-        C[i] = new T [p];
+        A[i] = new T [m];
     }
     
+    for (size_t i = 0; i < m; i++) {
+        B[i] = new T [p];
+    }
+
     if (getm<T>(n, m, Fa, A) < 0 || getm<T>(m, p, Fb, B) < 0) {
         std::cerr << "Not enough elements in the file" << std::endl;
 
         for (size_t i = 0; i < n; i++) {
             delete [] A[i];
-            delete [] C[i];
         }
         for (size_t i = 0; i < m; i++) {
             delete [] B[i];
         }
         delete [] A;
         delete [] B;
-        delete [] C;
         
         return -1;
+    }
+
+    T ** C = new T * [n];
+    for (size_t i = 0; i < n; i++) {
+        C[i] = new T [p];
     }
 
     clock_t time = 0;

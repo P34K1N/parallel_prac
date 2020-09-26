@@ -15,7 +15,6 @@ void size_t_to_char4 (size_t n, char * buf) {
 template <typename T>
 int getm (size_t n, size_t m, std::ifstream & F, T ** A) {
     for (size_t i = 0; i < n; i++) {
-        A[i] = new T[m];
         F.read((char *) A[i], m * sizeof(**A));
         if ((size_t) F.gcount() < m * sizeof(**A)) return -1;
     }
