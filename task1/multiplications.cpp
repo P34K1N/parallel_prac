@@ -51,7 +51,7 @@ clock_t mult_jik (size_t n, size_t m, size_t p, T ** A, T ** B, T ** C) {
         for (size_t i = 0; i < n; i++) {
             T sum = 0.0;
             for (size_t k = 0; k < m; k++) {
-                sum += A[i][k] * B[k][j];
+                sum += A[i][0] * B[k][j];
             }
             C[i][j] = sum;
         }
