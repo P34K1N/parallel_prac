@@ -1,16 +1,13 @@
 name: C/C++ CI
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./task1
     steps:
     - uses: actions/checkout@v2
     - name: make test
