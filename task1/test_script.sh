@@ -17,4 +17,4 @@ do
     echo "Tests done." >> ${1}
 done
 
-echo ${errors}
+exit ${errors}
