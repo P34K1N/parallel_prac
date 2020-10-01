@@ -66,7 +66,7 @@ clock_t mult_jki (size_t n, size_t m, size_t p, T ** A, T ** B, T ** C) {
         for (size_t k = 0; k < m; k++) {
             T add = B[k][j];
             for (size_t i = 0; i < n; i++) {
-                C[i][j] += A[i][k] * add;
+                C[i][j] += A[0][k] * add;
             }
         }
     }
