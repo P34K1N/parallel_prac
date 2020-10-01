@@ -2,7 +2,7 @@
 
 errors=0;
 
-g++ -o ./tests/matrix_compare ./test/matrix_compare.cpp
+g++ -o ./tests/matrix_compare ./tests/matrix_compare.cpp
 for j in {0..5}
 do
     echo "Performing tests for $j version of multiplication:" >> ${1}
