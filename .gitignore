@@ -4,3 +4,8 @@ task1/matrix_gen
 task1/tests/matrix_compare
 task1/tests/matrix_gen_float
 task1/tests/matrix_gen_double
+task2/*.o
+task2/multi
+task2/big/big_matrix_gen
+task2/tests/matrix_compare
+task2/tests/matrix_gen_float
