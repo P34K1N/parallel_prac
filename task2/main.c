@@ -41,8 +41,8 @@ int main(int argc, char * argv[]) {
             break;
         case 'i':
             block_n = strtoul(argv[6], NULL, 10);
-            block_n = strtoul(argv[7], NULL, 10);
-            block_n = strtoul(argv[8], NULL, 10);
+            block_m = strtoul(argv[7], NULL, 10);
+            block_k = strtoul(argv[8], NULL, 10);
             break;
         default:
             fprintf(stderr, "Incorrect block size input mode\n");

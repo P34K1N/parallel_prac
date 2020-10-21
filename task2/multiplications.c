@@ -96,9 +96,9 @@ void block_mul_ikj (size_t n, size_t m, size_t p, float ** A, float ** B, float 
                 }
                 
                 for (size_t u = 0; u < blk_n; u++) {
-                    for (size_t v = 0; v < blk_p; v++) {
+                    for (size_t v = 0; v < blk_m; v++) {
                         double add = blk_A[u][v];
-                        for (size_t w = 0; w < blk_m; w++) {
+                        for (size_t w = 0; w < blk_p; w++) {
                             blk_C[u][w] += add * blk_B[v][w];
                         }
                     }
