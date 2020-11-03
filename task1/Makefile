@@ -1,5 +1,5 @@
 all: multi
-multi: main.cpp handlr.cpp multiplicatios.cpp tech.cpp
+multi: main.cpp handlr.cpp multiplications.cpp tech.cpp
 	g++ -o $@ $^
 test: multi
 	rm -f test_results.log
