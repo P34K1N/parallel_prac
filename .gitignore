@@ -10,4 +10,7 @@ task2/big/big_matrix_gen
 task2/tests/matrix_compare
 task2/tests/matrix_gen_float
 task3/main
-
+task3/tests/compare
+task3/tests/primes_single
+task3/main_mpi
+task3/main_pthread
