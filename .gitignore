@@ -14,3 +14,5 @@ task3/tests/compare
 task3/tests/primes_single
 task3/main_mpi
 task3/main_pthread
+
+
