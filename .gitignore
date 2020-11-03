@@ -9,3 +9,5 @@ task2/multi
 task2/big/big_matrix_gen
 task2/tests/matrix_compare
 task2/tests/matrix_gen_float
+task3/main
+

@@ -38,6 +38,7 @@ int main(int argc, char * argv[]) {
             break;
         case 'o':
             block_n = block_m = block_k = sqrt(cache_size / 3 / sizeof(float)); 
+            printf("opt blk sz = %ld\n", block_n);
             break;
         case 'i':
             block_n = strtoul(argv[6], NULL, 10);
