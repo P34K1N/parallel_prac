@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
     unsigned mid = sqrt(hi);
     unsigned * primes = calloc(pi(1, mid), sizeof(*primes));
     unsigned pr_sz = 0;
+    unsigned count = 0;
     
     if (!myrank) {
         f = fopen(argv[3], "w");
@@ -37,7 +38,10 @@ int main(int argc, char *argv[]) {
             if (is_prime[i] == 0) {
                 primes[pr_sz] = i;
                 pr_sz++;
-                if (i >= lo) fprintf(f, "%u ", i);
+                if (i >= lo) {
+                    fprintf(f, "%u ", i);
+                    count++;
+                }
                 for (unsigned j = i + 1; j <= mid; j++) {
                     if (!(j % i)) is_prime[j] = 1; 
                 }
@@ -55,7 +59,6 @@ int main(int argc, char *argv[]) {
     end = (end < hi) ? end : hi;
     unsigned * more_primes = calloc(pi(start, end - 1), sizeof(*more_primes));
     unsigned pr_c = 0;
-    unsigned count = pr_sz;
     
     for (unsigned i = start; i <= end; i++) {
         unsigned char is_pr = 1;
