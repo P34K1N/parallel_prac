@@ -78,7 +78,18 @@ int main(int argc, char *argv[]) {
     time = t_finish - t_start;
     MPI_Reduce(&time, &tot, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce(&time, &max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    if (!myrank) printf("%lf %lf\n", tot, max);
+    if (!myrank) {
+        if (argv[4] == NULL || argv[5] == NULL) {
+            printf("%lf %lf\n", tot, max);
+        } else {
+            FILE * res = fopen(argv[4], "w");
+            fprintf(res, "%lf ", tot);
+            fclose(res);
+            res = fopen(argv[5], "w");
+            fprintf(res, "%lf ", max);
+            fclose(res);
+        }
+    }
 
     if (!myrank) {
         for (int i = 0; i < pr_c; i++) {
