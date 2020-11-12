@@ -57,18 +57,18 @@ int main(int argc, char *argv[]) {
     unsigned start = begin + myrank * range;
     unsigned end = begin + (myrank + 1) * range - 1;
     end = (end < hi) ? end : hi;
+    unsigned * is_prime_p = calloc(end - start + 1, sizeof(*is_prime_p));
     unsigned * more_primes = calloc(pi(start, end - 1), sizeof(*more_primes));
     unsigned pr_c = 0;
     
-    for (unsigned i = start; i <= end; i++) {
-        unsigned char is_pr = 1;
-        for (unsigned j = 0; j < pr_sz; j++) {
-            if (!(i % primes[j])) {
-                is_pr = 0;
-                break;
-            }
+    for (unsigned i = 0; i < pr_sz; i++) {
+        for (unsigned j = (start - 1 + primes[i] - (start - 1) % primes[i]); j <= end; j += primes[i]) {
+            is_prime_p[j - start] = 1;
         }
-        if (is_pr) {
+    }
+    
+    for (unsigned i = start; i <= end; i++) {
+        if (!is_prime_p[i - start]) {
             more_primes[pr_c] = i;
             pr_c++;
         }
