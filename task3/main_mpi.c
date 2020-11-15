@@ -115,6 +115,7 @@ int main(int argc, char *argv[]) {
         MPI_Send(more_primes, pr_c, MPI_UNSIGNED, 0, 0, MPI_COMM_WORLD);
     }
     
+    free(is_prime_p);
     free(primes);
     free(more_primes);
 

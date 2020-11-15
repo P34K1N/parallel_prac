@@ -10,7 +10,7 @@ do
         ((m=2**${j}))
         for k in {1..15}
         do 
-            bsub -n ${m} mpirun ../main_mpi 1 ${n} res.txt sum_${i}_${j}_${k}.txt max_${i}_${j}_${k}.txt
+            bsub ../main_pthread 1 ${n} res.txt ${m} sum_${i}_${j}_${k}_p.txt max_${i}_${j}_${k}_p.txt
         done
         sleep 10s
     done
