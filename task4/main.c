@@ -12,18 +12,18 @@ void rowwise(int n, int m, double * A, double * b, double * c, int size, int myr
     for (int i = 1; i < size; i++) {
         counts[i] = counts[i - 1];
         if (i == n % size) counts[i] -= m;
-        displc[i] += counts[i - 1];
+        displc[i] = displc[i - 1] + counts[i - 1];
     }
 
     if (myrank != 0) {
         b = calloc(m, sizeof(*b));
     } 
 
-    int my_n = counts[myrank];
+    int my_n = counts[myrank] / m;
 
     double * my_A = calloc(my_n * m, sizeof(*my_A));
 
-    MPI_Scatterv(A, counts, displc, MPI_DOUBLE, my_A, my_n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(A, counts, displc, MPI_DOUBLE, my_A, my_n * m, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast(b, m, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     double * my_c = calloc(my_n, sizeof(*my_c));
@@ -40,7 +40,6 @@ void rowwise(int n, int m, double * A, double * b, double * c, int size, int myr
         counts[i] /= m;
         displc[i] /= m;
     }
-    my_n = counts[myrank];
 
     if (myrank != 0) {
         free(b);
@@ -62,7 +61,7 @@ void columnwise(int n, int m, double * A, double * b, double * c, int size, int 
     for (int i = 1; i < size; i++) {
         counts[i] = counts[i - 1];
         if (i == m % size) counts[i]--;
-        displc[i] += counts[i - 1];
+        displc[i] = displc[i - 1] + counts[i - 1];
     }
 
     int my_m = counts[myrank];
