@@ -7,7 +7,7 @@ echo "Performing tests for rowwise version of multiplication and 1 process:" >> 
 for i in {0..19}
 do
     echo "Test number $i:" >> ${1}
-    mpirun -n 1 ./main tests/A${i} tests/b${i} tests/c${i}_ r >> ${1}
+    mpirun -n 1 ./main tests/A${i} tests/b${i} tests/c${i}_ r void.txt >> ${1}
     ./tests/matrix_compare tests/c${i}_ tests/c${i} >> ${1}
     errors=$(($errors + $?))
     rm -f ./tests/c${i}_
@@ -18,7 +18,7 @@ echo "Performing tests for rowwise version of multiplication and 2 processes:" >
 for i in {0..19}
 do
     echo "Test number $i:" >> ${1}
-    mpirun -n 2 ./main tests/A${i} tests/b${i} tests/c${i}_ r >> ${1}
+    mpirun -n 2 ./main tests/A${i} tests/b${i} tests/c${i}_ r void.txt >> ${1}
     ./tests/matrix_compare tests/c${i}_ tests/c${i} >> ${1}
     errors=$(($errors + $?))
     rm -f ./tests/c${i}_
@@ -29,7 +29,7 @@ echo "Performing tests for rowwise version of multiplication and 4 processes:" >
 for i in {0..19}
 do
     echo "Test number $i:" >> ${1}
-    mpirun -n 4 ./main tests/A${i} tests/b${i} tests/c${i}_ r >> ${1}
+    mpirun -n 4 ./main tests/A${i} tests/b${i} tests/c${i}_ r void.txt >> ${1}
     ./tests/matrix_compare tests/c${i}_ tests/c${i} >> ${1}
     errors=$(($errors + $?))
     rm -f ./tests/c${i}_
@@ -41,7 +41,7 @@ echo "Performing tests for columnwise version of multiplication and 1 process:" 
 for i in {0..19}
 do
     echo "Test number $i:" >> ${1}
-    mpirun -n 1 ./main tests/A${i} tests/b${i} tests/c${i}_ c >> ${1}
+    mpirun -n 1 ./main tests/A${i} tests/b${i} tests/c${i}_ c void.txt >> ${1}
     ./tests/matrix_compare tests/c${i}_ tests/c${i} >> ${1}
     errors=$(($errors + $?))
     rm -f ./tests/c${i}_
@@ -52,7 +52,7 @@ echo "Performing tests for columnwise version of multiplication and 2 processes:
 for i in {0..19}
 do
     echo "Test number $i:" >> ${1}
-    mpirun -n 2 ./main tests/A${i} tests/b${i} tests/c${i}_ c >> ${1}
+    mpirun -n 2 ./main tests/A${i} tests/b${i} tests/c${i}_ c void.txt >> ${1}
     ./tests/matrix_compare tests/c${i}_ tests/c${i} >> ${1}
     errors=$(($errors + $?))
     rm -f ./tests/c${i}_
@@ -63,7 +63,7 @@ echo "Performing tests for columnwise version of multiplication and 4 processes:
 for i in {0..19}
 do
     echo "Test number $i:" >> ${1}
-    mpirun -n 4 ./main tests/A${i} tests/b${i} tests/c${i}_ c >> ${1}
+    mpirun -n 4 ./main tests/A${i} tests/b${i} tests/c${i}_ c void.txt >> ${1}
     ./tests/matrix_compare tests/c${i}_ tests/c${i} >> ${1}
     errors=$(($errors + $?))
     rm -f ./tests/c${i}_

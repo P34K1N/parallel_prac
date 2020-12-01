@@ -56,28 +56,38 @@ void columnwise(int n, int m, double * A, double * b, double * c, int size, int 
     counts = calloc(size, sizeof(*counts));
     displc = calloc(size, sizeof(*displc));
 
-    counts[0] = (m / size + (0 < m % size));
+    if (myrank == 0) {
+        
+    }
+
+    counts[0] = (m / size + (0 < m % size)) * n;
     displc[0] = 0;
     for (int i = 1; i < size; i++) {
         counts[i] = counts[i - 1];
-        if (i == m % size) counts[i]--;
+        if (i == m % size) counts[i] -= n;
         displc[i] = displc[i - 1] + counts[i - 1];
     }
 
-    int my_m = counts[myrank];
+    int my_m = counts[myrank] / n;
     
     double * my_A = calloc(n * my_m, sizeof(*my_A));
     double * my_b = calloc(my_m, sizeof(*my_b));
     double * my_c = calloc(n, sizeof(*my_c));
 
-    for (int i = 0; i < n; i++) {
-        MPI_Scatterv(A + i * m, counts, displc, MPI_DOUBLE, my_A + my_m * i, my_m, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(A, counts, displc, MPI_DOUBLE, my_A, my_m * n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    for (int i = 0; i < size; i++) {
+        counts[i] /= n;
+        displc[i] /= n;
     }
+
     MPI_Scatterv(b, counts, displc, MPI_DOUBLE, my_b, my_m, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < my_m; j++) {
-            my_c[i] += my_A[i * my_m + j] * my_b[j];
+    int cnt = 0;
+    for (int j = 0; j < my_m; j++) {
+        for (int i = 0; i < n; i++) {
+            my_c[i] += my_A[cnt] * my_b[j];
+            cnt++;
         }
     }
 
@@ -95,6 +105,7 @@ int main(int argc, char * argv[]) {
     int size, myrank;
     MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    double start, end;
 
     double * A, * b, * c;
     int n = 0, m = 0;
@@ -108,7 +119,6 @@ int main(int argc, char * argv[]) {
         if (m != m_) {
             fprintf(stderr, "Matrix sizes do not match.\n");
         } 
-        
         A = calloc(n * m, sizeof(*A));
         b = calloc(m, sizeof(*b));
         if (fread(A, sizeof(*A), n * m, fA) < n * m || fread(b, sizeof(*b), m, fb) < m) {
@@ -116,12 +126,28 @@ int main(int argc, char * argv[]) {
         }
         fclose(fA);
         fclose(fb);
+
+        if (argv[4][0] == 'c') {
+            int cnt = 0;
+            double * new_A = calloc(n * m, sizeof(*A));
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    new_A[j * n + i] = A[cnt];
+                    cnt++;
+                }
+            }
+            free(A);
+            A = new_A;
+        }
+
         c = calloc(n, sizeof(*c));
+        start = MPI_Wtime();
     }
 
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&m, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
+    
     switch (argv[4][0]) {
         case 'r': 
             rowwise(n, m, A, b, c, size, myrank);
@@ -134,9 +160,12 @@ int main(int argc, char * argv[]) {
                 fprintf(stderr, "Incorrect parallelism mode.\n");
             }
     }
-    
 
     if (myrank == 0) {
+        end = MPI_Wtime();
+        FILE * fr = fopen(argv[5], "w");
+        fprintf(fr, "%lf\n", end - start);
+        fclose(fr);
         FILE * fc = fopen(argv[3], "wb");
         fwrite(&n, sizeof(n), 1, fc);
         fwrite(c, sizeof(*c), n, fc);
