@@ -65,6 +65,8 @@ void * calc(void * arg) {
     my_args->time = end_t.tv_sec - begin_t.tv_sec + 1e-6 * (end_t.tv_usec - begin_t.tv_usec);
 
     free(is_prime_p);
+
+    return NULL;
 }
 
 int main(int argc, char *argv[]) {
