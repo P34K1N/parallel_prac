@@ -133,6 +133,7 @@ int main(int argc, char *argv[]) {
 
     tot += time_first;
     max += time_first;
+    /*
     if (argv[5] == NULL || argv[6] == NULL) {
         printf("%lf %lf\n", tot, max);
     } else {
@@ -143,9 +144,12 @@ int main(int argc, char *argv[]) {
         fprintf(res, "%lf ", max);
         fclose(res);
     }
+    */
 
     free(threads);
     free(thread_args);
     free(primes);
     fclose(f);
 }
+
+

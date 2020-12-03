@@ -1,3 +1,4 @@
+all: main_mpi main_pthread
 main_mpi: main_mpi.c
 	mpicc -o main_mpi main_mpi.c -lm
 main_pthread: main_pthread.c

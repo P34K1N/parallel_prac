@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
     time = t_finish - t_start;
     MPI_Reduce(&time, &tot, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce(&time, &max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    /*
     if (!myrank) {
         if (argv[4] == NULL || argv[5] == NULL) {
             printf("%lf %lf\n", tot, max);
@@ -90,6 +91,7 @@ int main(int argc, char *argv[]) {
             fclose(res);
         }
     }
+    */
 
     if (!myrank) {
         for (int i = 0; i < pr_c; i++) {
@@ -121,3 +123,5 @@ int main(int argc, char *argv[]) {
 
     MPI_Finalize();
 }
+
+
