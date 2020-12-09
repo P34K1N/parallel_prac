@@ -14,5 +14,16 @@ task3/tests/compare
 task3/tests/primes_single
 task3/main_mpi
 task3/main_pthread
-
+task4/main
+task4/mt
+task4/vt
+task4/tests/matrix_compare
+task4/tests/matrix_gen
+task4/big/big_matrix_gen
+task4/res/command_file_gen
+task4/res/map_file_generate
+task5/main
+task5/mt
+task5/res/matrix_compare
+task5/res/matrix_gen_float
 
