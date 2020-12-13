@@ -26,4 +26,8 @@ task5/main
 task5/mt
 task5/res/matrix_compare
 task5/res/matrix_gen_float
+task5/big/big_matrix_gen
+task5/res/map_file_generate
+task5/command_file_gen
+
 

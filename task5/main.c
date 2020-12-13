@@ -10,6 +10,8 @@ inline static double min(double a, double b) {
 int main(int argc, char * argv[]) {
     MPI_Init(&argc, &argv);
 
+    double start, end, start_r, end_r, start_w, end_w;
+
     MPI_Status stat;
     
     int myrank, size;
@@ -40,6 +42,11 @@ int main(int argc, char * argv[]) {
     double * my_Ar, * my_Br;
 
     if (my_coords[2] == 0) {
+        MPI_Barrier(LAYER);
+        if (my_coords[0] == 0 && my_coords[1] == 0) {
+            start_r = MPI_Wtime();
+        }
+
         MPI_File fA, fB;
 
         MPI_File_open(LAYER, argv[1], MPI_MODE_RDONLY, MPI_INFO_NULL, &fA);
@@ -80,6 +87,16 @@ int main(int argc, char * argv[]) {
         MPI_File_read_all(fB, my_Br, readsizesB[0] * readsizesB[1], MPI_DOUBLE, &stat);
 
         MPI_Type_free(&BLOCK_B);
+
+        MPI_Barrier(LAYER);
+        if (my_coords[0] == 0 && my_coords[1] == 0) {
+            end_r = MPI_Wtime();
+        }
+    }
+
+    MPI_Barrier(CARTESIAN);
+    if (my_coords[0] == 0 && my_coords[1] == 0 && my_coords[2] == 0) {
+        start = MPI_Wtime();
     }
 
     if (!(my_coords[2] == 0 && my_coords[2] == my_coords[1])) {
@@ -169,7 +186,17 @@ int main(int argc, char * argv[]) {
 
     free(my_Cw);
 
+    MPI_Barrier(CARTESIAN);
+    if (my_coords[0] == 0 && my_coords[1] == 0 && my_coords[2] == 0) {
+        end = MPI_Wtime();
+    }
+
     if (my_coords[2] == 0) {
+        MPI_Barrier(LAYER);
+        if (my_coords[0] == 0 && my_coords[1] == 0) {
+            start_w = MPI_Wtime();
+        }
+
         MPI_File fC;
 
         MPI_File_open(LAYER, argv[3], MPI_MODE_WRONLY | MPI_MODE_CREATE, MPI_INFO_NULL, &fC);
@@ -199,6 +226,14 @@ int main(int argc, char * argv[]) {
 
         MPI_Type_free(&BLOCK_C);
         free(my_Cr);
+
+        MPI_Barrier(LAYER);
+        if (my_coords[0] == 0 && my_coords[1] == 0) {
+            end_w = MPI_Wtime();
+            FILE * res= fopen(argv[4], "w");
+            fprintf(res, "%lf %lf\n", end - start, end_w - start_w + end_r - start_r);
+            fclose(res);
+        }
     }
 
     MPI_Finalize();
