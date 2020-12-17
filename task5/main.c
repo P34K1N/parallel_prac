@@ -49,11 +49,23 @@ int main(int argc, char * argv[]) {
 
         MPI_File fA, fB;
 
+        char c;
+
         MPI_File_open(LAYER, argv[1], MPI_MODE_RDONLY, MPI_INFO_NULL, &fA);
         MPI_File_open(LAYER, argv[2], MPI_MODE_RDONLY, MPI_INFO_NULL, &fB);
 
-        MPI_File_read_all(fA, sizes, 2, MPI_INT, &stat);
-        MPI_File_read_all(fB, sizes + 1, 2, MPI_INT, &stat);
+        size_t buf[2];
+
+        MPI_File_read_all(fA, &c, 1, MPI_CHAR, &stat);  
+        MPI_File_read_all(fA, buf, 2, MPI_UNSIGNED_LONG_LONG, &stat);
+        sizes[0] = buf[0];
+        sizes[1] = buf[1];
+        MPI_File_read_all(fB, &c, 1, MPI_CHAR, &stat); 
+        MPI_File_read_all(fB, buf, 2, MPI_UNSIGNED_LONG_LONG, &stat);
+        sizes[1] = buf[0];
+        sizes[2] = buf[1];
+
+        //printf("%d %d %d\n", sizes[0], sizes[1], sizes[2]);
 
         int offsets[2];
         MPI_Datatype BLOCK_A, BLOCK_B;
@@ -68,7 +80,7 @@ int main(int argc, char * argv[]) {
 
         my_Ar = calloc(readsizesA[0] * readsizesA[1], sizeof(*my_Ar));
 
-        MPI_File_set_view(fA, 8, MPI_DOUBLE, BLOCK_A, "native", MPI_INFO_NULL);
+        MPI_File_set_view(fA, 1 + sizeof(buf), MPI_DOUBLE, BLOCK_A, "native", MPI_INFO_NULL);
         MPI_File_read_all(fA, my_Ar, readsizesA[0] * readsizesA[1], MPI_DOUBLE, &stat);
 
         MPI_Type_free(&BLOCK_A);
@@ -83,7 +95,7 @@ int main(int argc, char * argv[]) {
 
         my_Br = calloc(readsizesB[0] * readsizesB[1], sizeof(*my_Br));
 
-        MPI_File_set_view(fB, 8, MPI_DOUBLE, BLOCK_B, "native", MPI_INFO_NULL);
+        MPI_File_set_view(fB, 1 + sizeof(buf), MPI_DOUBLE, BLOCK_B, "native", MPI_INFO_NULL);
         MPI_File_read_all(fB, my_Br, readsizesB[0] * readsizesB[1], MPI_DOUBLE, &stat);
 
         MPI_Type_free(&BLOCK_B);
@@ -202,8 +214,14 @@ int main(int argc, char * argv[]) {
         MPI_File_open(LAYER, argv[3], MPI_MODE_WRONLY | MPI_MODE_CREATE, MPI_INFO_NULL, &fC);
 
         if (my_coords[0] == 0 && my_coords[1] == 0) {
-            MPI_File_write(fC, sizes, 1, MPI_INT, &stat);
-            MPI_File_write(fC, sizes + 2, 1, MPI_INT, &stat);
+            char c = 'd';
+            
+            size_t buf[2];
+            buf[0] = sizes[0];
+            buf[1] = sizes[2];
+
+            MPI_File_write(fC, &c, 1, MPI_CHAR, &stat);  
+            MPI_File_write(fC, buf, 2, MPI_UNSIGNED_LONG_LONG, &stat);
         }
 
         int offsets[2], readsizesC[2], wrsizes[2];
@@ -221,7 +239,7 @@ int main(int argc, char * argv[]) {
         MPI_Type_create_subarray(2, wrsizes, readsizesC, offsets, MPI_ORDER_C, MPI_DOUBLE, &BLOCK_C);
         MPI_Type_commit(&BLOCK_C);
 
-        MPI_File_set_view(fC, 8, MPI_DOUBLE, BLOCK_C, "native", MPI_INFO_NULL);
+        MPI_File_set_view(fC, 1 + 2 * sizeof(size_t), MPI_DOUBLE, BLOCK_C, "native", MPI_INFO_NULL);
         MPI_File_write_all(fC, my_Cr, readsizesC[0] * readsizesC[1], MPI_DOUBLE, &stat);
 
         MPI_Type_free(&BLOCK_C);
