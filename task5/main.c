@@ -248,9 +248,11 @@ int main(int argc, char * argv[]) {
         MPI_Barrier(LAYER);
         if (my_coords[0] == 0 && my_coords[1] == 0) {
             end_w = MPI_Wtime();
+            /*
             FILE * res= fopen(argv[4], "w");
             fprintf(res, "%lf %lf\n", end - start, end_w - start_w + end_r - start_r);
             fclose(res);
+            */
         }
     }
 
